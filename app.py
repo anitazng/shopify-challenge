@@ -24,7 +24,8 @@ class Product(db.Model):
 
 @app.route('/')
 def index():
-    return render_template("index.html")
+    my_data = Product.query.all()
+    return render_template("index.html", products = my_data)
 
 @app.route('/add', methods = ['POST'])
 def add():
@@ -38,3 +39,23 @@ def add():
         db.session.commit()
 
         return redirect(url_for('index'))
+
+@app.route('/update', methods = ['GET', 'POST'])
+def update():
+    if request.method == 'POST':
+        my_data = Product.query.get(request.form.get('id'))
+
+        my_data.name = request.form['name']
+        my_data.price = request.form['price']
+        my_data.quantity = request.form['quantity']
+
+        db.session.commit()
+        return redirect(url_for('index'))
+
+@app.route('/delete/<id>/', methods = ['GET', 'POST'])
+def delete(id):
+    my_data = Product.query.get(id)
+    db.session.delete(my_data)
+
+    db.session.commit()
+    return redirect(url_for('index'))

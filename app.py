@@ -1,5 +1,7 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, send_file
 from flask_sqlalchemy import SQLAlchemy
+from io import StringIO, BytesIO
+import csv
 
 # Initialize the app
 app = Flask(__name__, instance_relative_config=True)
@@ -59,3 +61,15 @@ def delete(id):
 
     db.session.commit()
     return redirect(url_for('index'))
+
+@app.route('/generate-csv')
+def generate():
+    si = StringIO()
+    cw = csv.writer(si)
+    cw.writerow(['id', 'product name', 'price', 'quantity'])
+
+    for product in Product.query.all():
+        cw.writerows([[str(product.id), product.name, str(product.price), str(product.quantity)]])
+
+    si.seek(0)
+    return send_file(BytesIO(si.read().encode('utf8')), attachment_filename='products.csv', as_attachment=True)

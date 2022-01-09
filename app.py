@@ -6,7 +6,7 @@ import csv
 # Initialize the app
 app = Flask(__name__, instance_relative_config=True)
 
-# Load the config file
+# Load config file
 app.config.from_object('config')
 app.config.from_pyfile('config.py')
 

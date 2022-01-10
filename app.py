@@ -1,4 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, send_file
+from dotenv import load_dotenv
+import os
 from flask_sqlalchemy import SQLAlchemy
 from io import StringIO, BytesIO
 import csv
@@ -8,7 +10,13 @@ app = Flask(__name__, instance_relative_config=True)
 
 # Load config file
 # app.config.from_object('config')
-app.config.from_pyfile('config.py')
+# app.config.from_pyfile('config.py')
+
+# Load environment variables
+load_dotenv()
+app.config['SQLALCHEMY_DATABASE_URI'] =  os.environ.get('SQLALCHEMY_DATABASE_URI')
+app.config['SECRET_KEY'] = os.environ.get('APP_SECRET_KEY')
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = os.environ.get('SQLALCHEMY_TRACK_MODIFICATIONS')
 
 # Database variable initialization
 db = SQLAlchemy(app)

@@ -7,7 +7,7 @@ import csv
 app = Flask(__name__, instance_relative_config=True)
 
 # Load config file
-app.config.from_object('config')
+# app.config.from_object('config')
 app.config.from_pyfile('config.py')
 
 # Database variable initialization

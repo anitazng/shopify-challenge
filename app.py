@@ -13,11 +13,11 @@ app = Flask(__name__, instance_relative_config=True)
 # app.config.from_pyfile('config.py')
 
 # Load environment variables
-load_dotenv()
+load_dotenv('.env')
 app.config['SQLALCHEMY_DATABASE_URI'] =  os.environ.get('SQLALCHEMY_DATABASE_URI')
-app.config['SECRET_KEY'] = os.environ.get('APP_SECRET_KEY')
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = os.environ.get('SQLALCHEMY_TRACK_MODIFICATIONS')
-app.config["MYSQL_HOST"]="127.0.0.1"
+# app.config["MYSQL_HOST"]="127.0.0.1"
 app.config["MYSQL_USER"]="root"
 
 # Database variable initialization

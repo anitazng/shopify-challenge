@@ -8,10 +8,6 @@ import csv
 # Initialize the app
 app = Flask(__name__, instance_relative_config=True)
 
-# Load config file
-# app.config.from_object('config')
-# app.config.from_pyfile('config.py')
-
 # Load environment variables
 load_dotenv('.env')
 app.config['SQLALCHEMY_DATABASE_URI'] =  os.environ.get('SQLALCHEMY_DATABASE_URI')

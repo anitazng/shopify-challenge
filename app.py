@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, send_file
 from dotenv import load_dotenv
 import os
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy_utils.functions import database_exists
+from sqlalchemy import create_engine
 from io import StringIO, BytesIO
 import csv
 
@@ -11,15 +11,14 @@ app = Flask(__name__)
 
 # Load environment variables
 load_dotenv('.env')
-app.config['SQLALCHEMY_DATABASE_URI'] =  os.environ.get('SQLALCHEMY_DATABASE_URI')
+app.config['SQLALCHEMY_DATABASE_URI'] =  "mysql+pymysql://root:@localhost/inventory_db"
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = os.environ.get('SQLALCHEMY_TRACK_MODIFICATIONS')
 
 # Database variable initialization
+engine = create_engine("mysql+pymysql://root:@localhost")
+engine.execute("CREATE SCHEMA IF NOT EXISTS `inventory_db`;")
 db = SQLAlchemy(app)
-
-if database_exists(app.config['SQLALCHEMY_DATABASE_URI']):
-    db.create_all()
 
 class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -31,6 +30,9 @@ class Product(db.Model):
         self.name = name
         self.price = price
         self.quantity = quantity
+
+# Create tables
+db.create_all()
 
 @app.route('/')
 def index():

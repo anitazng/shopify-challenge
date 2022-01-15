@@ -2,11 +2,12 @@ from flask import Flask, render_template, request, redirect, url_for, send_file
 from dotenv import load_dotenv
 import os
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy_utils.functions import database_exists
 from io import StringIO, BytesIO
 import csv
 
 # Initialize the app
-app = Flask(__name__, instance_relative_config=True)
+app = Flask(__name__)
 
 # Load environment variables
 load_dotenv('.env')
@@ -16,6 +17,9 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = os.environ.get('SQLALCHEMY_TRACK_
 
 # Database variable initialization
 db = SQLAlchemy(app)
+
+if database_exists(app.config['SQLALCHEMY_DATABASE_URI']):
+    db.create_all()
 
 class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
